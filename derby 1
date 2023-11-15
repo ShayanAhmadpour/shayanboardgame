@@ -42,19 +42,6 @@ def main():
         pygame.display.update()
     pygame.quit()
 
-class GameState():
-    def __init__(self):
-        self.board = [
-            ["b1"],
-            ["b2","b3","b4","b5","b6"],
-            ["b4","b5","b6","b2","b3"],
-            ["__","__","__","__","__"],
-            ["__","__","__","__","__"],
-            ["__","__","__","__","__"],
-            ["r2","r3","r4","r5","r6"],
-            ["r4","r5","r6","r2","r3"],
-            ["r1"]]
-        self.redToMove = True
 def drawGameState(screen,gs):
     drawBoard(screen)
     drawPieces(screen,gs.board)

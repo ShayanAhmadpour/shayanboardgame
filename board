@@ -1,5 +1,5 @@
 import pygame
-pygame.init()
+pygame.init()    
 WIDTH = 455
 HEIGHT = 665
 DEMENSION1 = 7

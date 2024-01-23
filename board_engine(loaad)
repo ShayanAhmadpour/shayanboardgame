@@ -1,0 +1,37 @@
+class Board():
+    def __init__(self):
+        self.board = [
+            ["b2","b3","b4","b5","b6"],
+            ["b4","b5","b6","b2","b3"],
+            ["__","__","__","__","__"],
+            ["__","__","__","__","__"],
+            ["__","__","__","__","__"],
+            ["r2","r3","r4","r5","r6"],
+            ["r4","r5","r6","r2","r3"]]
+        self.redToMove = True
+        self.movelog = []
+
+    def makeMove(self, move):
+        self.board[move.startRow][move.startCol] = "__"
+        self.board[move.endRow][move.endCol] = move.pieceMoved
+        self.movelog.append(move)
+        self.redToMove = not self.redToMove #swap players
+class Move():
+
+    ranktoRows = {"1":6,"2":5,"3":4,"4":3,"5":2,"6":1,"7":0}
+    rowstoRanks = {v: k for k, v in ranktoRows.items()}
+    filestoCols = {"a": 0,"b": 1,"c": 2,"d": 3,"e": 4}
+    colstoFiles = {v: k for k, v in filestoCols.items()}
+
+    def __init__(self, startSq, endSq, board):
+        self.startRow = startSq[0]
+        self.startCol = startSq[1]
+        self.endRow = endSq[0]
+        self.endCol = endSq[1]
+        self.pieceMoved = board[self.startRow][self.startCol]
+        self.pieceCaptured = board[self.endRow][self.endCol]
+
+    def getGameLocation(self):
+        return self.getRankFile(self.startRow, self.startCol) + self.getRankFile(self.endRow, self.endCol)
+    def getRankFile(self, r, c):
+        return self.colstoFiles[c] + self.rowstoRanks[r]

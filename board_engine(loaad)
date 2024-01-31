@@ -1,13 +1,13 @@
 class Board():
     def __init__(self):
         self.board = [
-            ["b2","b3","b4","b5","b6"],
-            ["b4","b5","b6","b2","b3"],
-            ["__","__","__","__","__"],
-            ["__","__","__","__","__"],
-            ["__","__","__","__","__"],
-            ["r2","r3","r4","r5","r6"],
-            ["r4","r5","r6","r2","r3"]]
+            ["b2", "b3", "b4", "b5", "b6"],
+            ["b4", "b5", "b6", "b2", "b3"],
+            ["__", "__", "__", "__", "__"],
+            ["__", "__", "__", "__", "__"],
+            ["__", "__", "__", "__", "__"],
+            ["r2", "r3", "r4", "r5", "r6"],
+            ["r4", "r5", "r6", "r2", "r3"]]
         self.redToMove = True
         self.movelog = []
 
@@ -15,12 +15,20 @@ class Board():
         self.board[move.startRow][move.startCol] = "__"
         self.board[move.endRow][move.endCol] = move.pieceMoved
         self.movelog.append(move)
-        self.redToMove = not self.redToMove #swap players
+        self.redToMove = not self.redToMove  # swap players
+
+    def undoMove(self):
+        if len(self.movelog) !=0: #make sure that there is a move to undo
+            move = self.movelog.pop()
+            self.board[move.startRow][move.startCol] = move.pieceMoved
+            self.board[move.endRow][move.endCol] = move.pieceCaptured
+            self.redToMove = not self.redToMove
+
 class Move():
 
-    ranktoRows = {"1":6,"2":5,"3":4,"4":3,"5":2,"6":1,"7":0}
+    ranktoRows = {"1": 6, "2": 5, "3": 4, "4": 3, "5": 2, "6": 1, "7": 0}
     rowstoRanks = {v: k for k, v in ranktoRows.items()}
-    filestoCols = {"a": 0,"b": 1,"c": 2,"d": 3,"e": 4}
+    filestoCols = {"a": 0, "b": 1, "c": 2, "d": 3, "e": 4}
     colstoFiles = {v: k for k, v in filestoCols.items()}
 
     def __init__(self, startSq, endSq, board):

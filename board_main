@@ -44,7 +44,7 @@ def main():
                     sqSelected = () #deselect
                     playerClicks = [] #clear player clicks
                 else:
-                    sqSelected = (row, col)
+                    sqSelected = (row-1, col)
                     playerClicks.append(sqSelected) #append for both 1st and 2nd clicks
                 if len(playerClicks) == 2:
                     move = loaad.Move(playerClicks[0], playerClicks[1],gs.board)
@@ -52,6 +52,9 @@ def main():
                     gs.makeMove(move)
                     sqSelected = ()
                     playerClicks = []
+            elif e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_z: #undo when "z" is pressed
+                    gs.undoMove()
         drawGameState(screen, gs)
         pygame.display.update()
     pygame.quit()
@@ -81,7 +84,7 @@ def drawPieces(screen, board):
         for coloumn in range(DEMENSION2):
             piece = board[row][coloumn]
             if piece != "__":
-                screen.blit(IMAGES[piece], pygame.Rect(coloumn*SQ_SIZE, row*SQ_SIZE, SQ_SIZE, SQ_SIZE))
+                screen.blit(IMAGES[piece], pygame.Rect(coloumn*SQ_SIZE+20, row*SQ_SIZE+100, SQ_SIZE, SQ_SIZE))
 
 
 main()

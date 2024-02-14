@@ -1,0 +1,64 @@
+class Board():
+    def __init__(self):
+        self.board = [
+            ["b2", "b3", "b4", "b5", "b6"],
+            ["b4", "b5", "b6", "b2", "b3"],
+            ["__", "__", "__", "__", "__"],
+            ["__", "__", "__", "__", "__"],
+            ["__", "__", "__", "__", "__"],
+            ["r2", "r3", "r4", "r5", "r6"],
+            ["r4", "r5", "r6", "r2", "r3"]]
+        self.redToMove = True
+        self.movelog = []
+
+class Soard():
+    def __init__(self):
+        self.boar = [
+            ["_", "_", "b1", "_", "_"],
+            ["b2", "b3", "b4", "b5", "b6"],
+            ["b4", "b5", "b6", "b2", "b3"],
+            ["__", "__", "__", "__", "__"],
+            ["__", "__", "__", "__", "__"],
+            ["__", "__", "__", "__", "__"],
+            ["r2", "r3", "r4", "r5", "r6"],
+            ["r4", "r5", "r6", "r2", "r3"],
+            ["_", "_", "r1", "_", "_"]]
+        self.redToMove = True
+        self.movelog = []
+
+    def makeMove(self, move):
+        self.boar[move.startRow][move.startCol] = "__"
+        self.boar[move.endRow][move.endCol] = move.pieceMoved
+        self.movelog.append(move)
+        self.redToMove = not self.redToMove  # swap players
+
+    def undoMove(self):
+        if len(self.movelog) !=0: #make sure that there is a move to undo
+            move = self.movelog.pop()
+            self.boar[move.startRow][move.startCol] = move.pieceMoved
+            self.boar[move.endRow][move.endCol] = move.pieceCaptured
+            self.redToMove = not self.redToMove
+    def possible(self):
+
+    def getpmove(self):
+        if self.redToMove:
+
+class Move():
+
+    ranktoRows = {"1": 8,"2": 7,"3": 6, "4": 5, "5": 4, "6": 3, "7": 2, "8": 1, "9": 0}
+    rowstoRanks = {v: k for k, v in ranktoRows.items()}
+    filestoCols = {"a": 0, "b": 1, "c": 2, "d": 3, "e": 4}
+    colstoFiles = {v: k for k, v in filestoCols.items()}
+
+    def __init__(self, startSq, endSq, boar):
+        self.startRow = startSq[0]
+        self.startCol = startSq[1]
+        self.endRow = endSq[0]
+        self.endCol = endSq[1]
+        self.pieceMoved = boar[self.startRow][self.startCol]
+        self.pieceCaptured = boar[self.endRow][self.endCol]
+
+    def getGameLocation(self):
+        return self.getRankFile(self.startRow, self.startCol) + self.getRankFile(self.endRow, self.endCol)
+    def getRankFile(self, r, c):
+        return self.colstoFiles[c] + self.rowstoRanks[r]

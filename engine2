@@ -38,10 +38,19 @@ class Soard():
             self.boar[move.startRow][move.startCol] = move.pieceMoved
             self.boar[move.endRow][move.endCol] = move.pieceCaptured
             self.redToMove = not self.redToMove
-    def possible(self):
+    #def possible(self):
+        #moves = []
+        #for r in range(len(self.boar)):
+            #for c in range(len(self.boar[r])):
+                #turn = self.boar[r][c][0]
+                #if(turn == "r" and self.redToMove) and (turn == "b" and not self.redToMove):
+                    #piece = self.boar[r][c][1]
+                    #if piece == "1"
 
-    def getpmove(self):
-        if self.redToMove:
+
+    #def getpmove(self, r, c, moves):
+        #if self.redToMove:
+
 
 class Move():
 
@@ -57,7 +66,12 @@ class Move():
         self.endCol = endSq[1]
         self.pieceMoved = boar[self.startRow][self.startCol]
         self.pieceCaptured = boar[self.endRow][self.endCol]
+        #self.moveID = self.startRow*1000 + self.startCol*100 + self.endRow*10 + self.endCol
+        #print(self.moveID)
 
+    #def __eq__(self, other):
+        #if isinstance(other, Move):
+            #return self.moveID == other.moveID
     def getGameLocation(self):
         return self.getRankFile(self.startRow, self.startCol) + self.getRankFile(self.endRow, self.endCol)
     def getRankFile(self, r, c):

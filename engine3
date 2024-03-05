@@ -1,0 +1,140 @@
+import pygame
+class Soard():
+    def __init__(self):
+        self.boar = [
+            ["_", "_", "b1", "_", "_"],
+            ["b2", "b3", "b4", "b5", "b6"],
+            ["b4", "b5", "b6", "b2", "b3"],
+            ["__", "__", "__", "__", "__"],
+            ["__", "__", "__", "__", "__"],
+            ["__", "__", "__", "__", "__"],
+            ["r2", "r3", "r4", "r5", "r6"],
+            ["r4", "r5", "r6", "r2", "r3"],
+            ["_", "_", "r1", "_", "_"]]
+        self.redToMove = True
+        self.blueToMove = False
+        self.movelog = []
+
+
+    #class adad():
+        #def __init__(self):
+            #row = 9
+            #col = 5
+            #for i in range(row):
+                #for j in range(col):
+                    #self.padad = self.boar[i*j]
+                    #print(self.padad)
+    def makeMove(self, move):
+        self.boar[move.startRow][move.startCol] = "__"
+        self.boar[move.endRow][move.endCol] = move.pieceMoved
+        self.movelog.append(move)
+        self.redToMove = self.blueToMove = not self.redToMove  # swap players
+
+    def undoMove(self):
+        if len(self.movelog) !=0: #make sure that there is a move to undo
+            move = self.movelog.pop()
+            self.boar[move.startRow][move.startCol] = move.pieceMoved
+            self.boar[move.endRow][move.endCol] = move.pieceCaptured
+            self.redToMove = not self.redToMove
+
+    def change_turn(self,redToMove,blueToMove):
+        if self.turns == redToMove:
+            self.turns = blueToMove
+        else:
+            self.turns = redToMove
+
+
+    def possible(self):
+        moves = []
+        for r in range(len(self.boar)):
+            for c in range(len(self.boar[r])):
+                turn = self.boar[r][c][0]
+                if(turn == "r" and self.redToMove) or (turn == "b" and self.blueToMove):
+                    piece = self.boar[r][c][1]
+                    if piece != "__" or piece != "_":
+                        self.getpmove(r, c, moves)
+                    #if piece == "1":
+                        #pass
+                    #if piece == "2":
+                        #pass
+                    #if piece == "3":
+                        #pass
+                    #if piece == "4":
+                        #pass
+                    #if piece == "5":
+                        #pass
+                    #if piece == "6":
+                        #pass
+        return moves
+
+    def getpmove(self, r, c, moves):
+            if self.redToMove:
+                if self.boar[r-1][c] == "__":
+                    moves.append(Move((r,c),(r-1,c),self.boar))#yedoone jolo
+
+                if c-1 >= 0:
+                    if self.boar[r-1][c-1] == "__":
+                        moves.append(Move((r, c), (r-1, c-1), self.boar))#harekat fili to left
+
+                #if c+1 <=7:
+                    #if self.boar[r-1][c+1] == "__":
+                        #moves.append(Move((r, c), (r-1, c+1), self.boar))#harekat fili to right
+
+            else: #blue to move
+                if self.blueToMove:
+                    if self.boar[r+1][c] == "__":
+                        moves.append(Move((r, c), (r+1, c), self.boar))#yedoone jolo
+
+                    if c-1 >= 0:
+                        if self.boar[r+1][c-1] == "__":
+                            moves.append(Move((r, c), (r+1, c-1), self.boar))  # harekat fili to left
+
+                    if c+1 <= 7:
+                        if self.boar[r+1][c+1] == "__":
+                            moves.append(Move((r, c), (r+1, c+1), self.boar))  # harekat fili to right
+
+
+#def shart_win(self):
+        #for r in range(len(self.boar)):
+            #for c in range(len(self.boar[r])):
+                #piececolor = self.boar[r][c][0]
+        #row = 9
+        #col = 5
+        #if piececolor == "r":
+            #if self.boar[row[8]][col[2]] == (piececolor == "b"):
+                #run = False
+        #if piececolor == "b":
+            #if self.boar[row[0]][col[2]] == (piececolor == "r"):
+                #run = False
+
+    def timer(self):
+        Font = pygame.font.SysFont("Arial", 25)
+
+
+
+
+
+class Move():
+
+    ranktoRows = {"1": 8,"2": 7,"3": 6, "4": 5, "5": 4, "6": 3, "7": 2, "8": 1, "9": 0}
+    rowstoRanks = {v: k for k, v in ranktoRows.items()}
+    filestoCols = {"a": 0, "b": 1, "c": 2, "d": 3, "e": 4}
+    colstoFiles = {v: k for k, v in filestoCols.items()}
+
+    def __init__(self, startSq, endSq, boar):
+        self.startRow = startSq[0]
+        self.startCol = startSq[1]
+        self.endRow = endSq[0]
+        self.endCol = endSq[1]
+        self.pieceMoved = boar[self.startRow][self.startCol]
+        self.pieceCaptured = boar[self.endRow][self.endCol]
+        self.moveID = self.startRow*1000 + self.startCol*100 + self.endRow*10 + self.endCol
+
+    def __eq__(self, other):
+        if isinstance(other, Move):
+            return self.moveID == other.moveID
+        return False
+    def getGameLocation(self):
+        return self.getRankFile(self.startRow, self.startCol) + self.getRankFile(self.endRow, self.endCol)
+    def getRankFile(self, r, c):
+        return self.colstoFiles[c] + self.rowstoRanks[r]

@@ -1,5 +1,7 @@
 import pygame
+import time
 from images import loaad
+pygame.init()
 
 WIDTH = 455
 HEIGHT = 665
@@ -22,8 +24,8 @@ def loadImages():
         IMAGES[piece] = pygame.transform.scale(pygame.image.load("w" + piece + ".png"),(SQ_SIZE, SQ_SIZE))
 
 def main():
-    pygame.init()
     clock = pygame.time.Clock()
+    previousTime = time.time()
     screen = pygame.display.set_mode((WIDTH + 40, HEIGHT + 202))
     gd = loaad.Soard()
     validMoves = gd.possible()
@@ -35,7 +37,7 @@ def main():
 
     while run:
         clock.tick(FPS)
-        #gd.shart_win()
+        gd.check_win()
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 run = False

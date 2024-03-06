@@ -1,4 +1,6 @@
 import pygame
+pygame.init()
+#from images import centerr
 class Soard():
     def __init__(self):
         self.boar = [
@@ -26,9 +28,11 @@ class Soard():
                     #print(self.padad)
     def makeMove(self, move):
         self.boar[move.startRow][move.startCol] = "__"
+        print(move.pieceMoved)
         self.boar[move.endRow][move.endCol] = move.pieceMoved
         self.movelog.append(move)
-        self.redToMove = self.blueToMove = not self.redToMove  # swap players
+        self.redToMove = not self.redToMove
+        self.blueToMove = not self.blueToMove# swap players
 
     def undoMove(self):
         if len(self.movelog) !=0: #make sure that there is a move to undo
@@ -37,11 +41,11 @@ class Soard():
             self.boar[move.endRow][move.endCol] = move.pieceCaptured
             self.redToMove = not self.redToMove
 
-    def change_turn(self,redToMove,blueToMove):
-        if self.turns == redToMove:
-            self.turns = blueToMove
-        else:
-            self.turns = redToMove
+    #def change_turn(self,redToMove,blueToMove):
+        #if self.turns == redToMove:
+            #self.turns = blueToMove
+        #else:
+            #self.turns = redToMove
 
 
     def possible(self):
@@ -76,9 +80,9 @@ class Soard():
                     if self.boar[r-1][c-1] == "__":
                         moves.append(Move((r, c), (r-1, c-1), self.boar))#harekat fili to left
 
-                #if c+1 <=7:
-                    #if self.boar[r-1][c+1] == "__":
-                        #moves.append(Move((r, c), (r-1, c+1), self.boar))#harekat fili to right
+                if c+1 <=4:
+                    if self.boar[r-1][c+1] == "__":
+                        moves.append(Move((r, c), (r-1, c+1), self.boar))#harekat fili to right
 
             else: #blue to move
                 if self.blueToMove:
@@ -89,30 +93,22 @@ class Soard():
                         if self.boar[r+1][c-1] == "__":
                             moves.append(Move((r, c), (r+1, c-1), self.boar))  # harekat fili to left
 
-                    if c+1 <= 7:
+                    if c+1 <= 4:
                         if self.boar[r+1][c+1] == "__":
                             moves.append(Move((r, c), (r+1, c+1), self.boar))  # harekat fili to right
 
 
-#def shart_win(self):
-        #for r in range(len(self.boar)):
-            #for c in range(len(self.boar[r])):
-                #piececolor = self.boar[r][c][0]
-        #row = 9
-        #col = 5
-        #if piececolor == "r":
-            #if self.boar[row[8]][col[2]] == (piececolor == "b"):
-                #run = False
-        #if piececolor == "b":
-            #if self.boar[row[0]][col[2]] == (piececolor == "r"):
-                #run = False
+    def check_win(self):
+        for r in range(len(self.boar)):
+            for c in range(len(self.boar[r])):
+                piececolor = self.boar[r][c][0]
 
-    def timer(self):
-        Font = pygame.font.SysFont("Arial", 25)
-
-
-
-
+                if piececolor == "r":
+                    if self.boar[8][2] == "b1":
+                        run = False
+                if piececolor == "b":
+                    if self.boar[0][2] == (piececolor == "r"):
+                        run = False
 
 class Move():
 
@@ -138,3 +134,70 @@ class Move():
         return self.getRankFile(self.startRow, self.startCol) + self.getRankFile(self.endRow, self.endCol)
     def getRankFile(self, r, c):
         return self.colstoFiles[c] + self.rowstoRanks[r]
+
+class Derby_Clock:
+    def __init__(self, rang, x, y, arz, tool, text=''):
+        self.rang = rang
+        self.x = x
+        self.y = y
+        self.arz = arz
+        self.tool = tool
+        self.text = text
+
+    def draw(self, screen, outline=None):
+        # Call this method to draw the button on the screen
+        if outline:
+            pygame.draw.rect(screen, outline, (self.x - 2, self.y - 2, self.arz + 4, self.tool + 4), 0)
+
+        pygame.draw.rect(screen, self.rang, (self.x, self.y, self.arz, self.tool), 0)
+
+        if self.text != '':
+            font = pygame.font.SysFont('freesansbold.ttf', 16)
+            text = font.render(self.text, 1, (0, 0, 0))
+            screen.blit(text, (self.x + (self.arz / 2 - text.get_width() / 2), self.y + (self.tool / 2 - text.get_height() / 2)))
+
+    def isOver(self, pos):
+        # Pos is the mouse position or a tuple of (x,y) coordinates
+        if self.x < pos[0] < self.x + self.arz:
+            if self.y < pos[1] < self.y + self.tool:
+                return True
+
+        return False
+
+    def draw_screen(minutes, seconds):
+        Font = pygame.font.SysFont("Trebuchet MS", 25)
+        global WHITE, BLACK
+
+        pause_button = (WHITE, 150, 240, 40, 20, "pause")
+
+        pause_button.draw(screen, None)
+
+        # minutes tezt
+        minutesFont = Font.render(str(minutes).zfill(2), True, BLACK)
+        minutesFontR = minutesFont.get_rect()
+        minutesFontR.center = (50, 60)
+        screen.blit(minutesFont, minutesFontR)
+
+        # seconds text
+        secondsFont = Font.render(":" + str(seconds).zfill(2), True, BLACK)
+        secondsFontR = secondsFont.get_rect()
+        secondsFontR.center = (80, 60)
+        screen.blit(secondsFont, secondsFontR)
+
+        pygame.display.flip()
+
+    def fix_time(minutes, seconds):
+        while seconds >= 60:
+            seconds -= 60
+            minutes += 1
+        while seconds < 0:
+            seconds += 60
+            minutes -= 1
+        return minutes, seconds
+
+
+
+
+
+
+ 
